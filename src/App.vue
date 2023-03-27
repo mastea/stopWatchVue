@@ -1,65 +1,47 @@
 <script setup>
 import { ref } from "vue";
 
-const sWatches = ref([]);
-const running = ref(false);
-const interval = ref(null);
+let id = 1;
+const sWatches = ref([
+  { id: id++, time: 234, running: false, interval: null },
+  { id: id++, time: 12, running: false, interval: null }
+]);
 
-const hours = ref(0);
-const minutes = ref(0);
-const seconds = ref(0);
-const time = ref(0);
-
-const startBtn = () => {
-  if (!running.value) {
-    running.value = true;
-    interval.value = setInterval(() => {
-      time.value++;
-      seconds.value = time.value;
-      minutes.value = parseInt(seconds.value / 60);
-      hours.value = parseInt(minutes.value / 60);
-      console.log(time.value);
+const startBtn = (watch) => {
+  if (!watch.running) {
+    watch.running = true;
+    watch.interval = setInterval(() => {
+      watch.time++;
     }, 1000);
   }
 };
-const pauseBtn = () => {
-  running.value = false;
-  clearInterval(interval.value);
+const pauseBtn = (watch) => {
+  watch.running = false;
+  clearInterval(watch.interval);
 };
-const stopBtn = () => {
-  running.value = false;
-  clearInterval(interval.value);
-  time.value = 0;
-  seconds.value = 0;
-  minutes.value = 0;
-  hours.value = 0;
+const stopBtn = (watch) => {
+  watch.running = false;
+  clearInterval(watch.interval);
+  watch.time = 0;
 };
 const addNew = () => {
-  
+  sWatches.value.push({ id: id++, time: 0, running: false, interval: null });
 }
 </script>
 <template>
   <div class="wrapper">
     <ul>
-      <li>
+      <li v-for="watch in sWatches" :key="watch.id">
         <span id="text">
-          {{ hours.toLocaleString(undefined, { minimumIntegerDigits: 2 }) }}.{{
-            (minutes % 60).toLocaleString(undefined, {
-              minimumIntegerDigits: 2,
-            })
-          }}.{{
-            (seconds % 60).toLocaleString(undefined, {
-              minimumIntegerDigits: 2,
-            })
-          }}
+          {{ watch.time }}
         </span>
         <img id="line" src="./assets/svg/vector.svg" />
-        <img :class="{ hide: running }" @click="startBtn" id="play" src="./assets/svg/play.svg" />
-        <img :class="{ hide: !running }" @click="pauseBtn" id="pause" src="./assets/svg/pause.svg" />
-        <img @click="stopBtn" id="stop" src="./assets/svg/stop.svg" />
+        <img :class="{ hide: watch.running }" @click="startBtn(watch)" id="play" src="./assets/svg/play.svg" />
+        <img :class="{ hide: !watch.running }" @click="pauseBtn(watch)" id="pause" src="./assets/svg/pause.svg" />
+        <img @click="stopBtn(watch)" id="stop" src="./assets/svg/stop.svg" />
       </li>
       <li>
-        <img @click="addNew" id="add" src="./assets/svg/add.svg" />
+        <img @click="addNew" id="addNew" src="./assets/svg/add.svg" />
       </li>
     </ul>
   </div>
