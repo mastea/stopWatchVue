@@ -4,7 +4,7 @@ import { ref } from "vue";
 let id = 1;
 const sWatches = ref([
   { id: id++, time: 234, running: false, interval: null },
-  { id: id++, time: 12, running: false, interval: null }
+  { id: id++, time: 13, running: false, interval: null }
 ]);
 
 const startBtn = (watch) => {
