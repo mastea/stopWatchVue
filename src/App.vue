@@ -3,7 +3,7 @@ import { ref } from "vue";
 
 let id = 1;
 const sWatches = ref([
-  { id: id++, time: 234, running: false, interval: null },
+  { id: id++, time: 3734, running: false, interval: null },
   { id: id++, time: 13, running: false, interval: null }
 ]);
 
@@ -33,7 +33,13 @@ const addNew = () => {
     <ul>
       <li v-for="watch in sWatches" :key="watch.id">
         <span id="text">
-          {{ watch.time }}
+          {{
+            (parseInt(parseInt(watch.time / 60) / 60) % 60).toLocaleString(undefined, { minimumIntegerDigits: 2 })
+          }}.{{
+            (parseInt(watch.time / 60) % 60).toLocaleString(undefined, { minimumIntegerDigits: 2 })
+          }}.{{
+            (watch.time % 60).toLocaleString(undefined, { minimumIntegerDigits: 2 })
+          }}
         </span>
         <img id="line" src="./assets/svg/vector.svg" />
         <img :class="{ hide: watch.running }" @click="startBtn(watch)" id="play" src="./assets/svg/play.svg" />
